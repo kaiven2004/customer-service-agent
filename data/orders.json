@@ -1,0 +1,63 @@
+[
+  {
+    "order_id": "A20261105001",
+    "user": "张伟",
+    "phone": "13812345678",
+    "address": "广东省深圳市南山区科技园南区 8 栋 301",
+    "status": "已签收",
+    "delivered_days_ago": 3,
+    "paid": 399.0,
+    "refund_status": "none",
+    "carrier": "顺丰速运",
+    "tracking_no": "SF1234567890",
+    "items": [
+      { "name": "小岚降噪耳机 Pro", "qty": 1, "price": 399.0 }
+    ]
+  },
+  {
+    "order_id": "A20261108002",
+    "user": "张伟",
+    "phone": "13812345678",
+    "address": "广东省深圳市南山区科技园南区 8 栋 301",
+    "status": "运输中",
+    "delivered_days_ago": null,
+    "eta_days": 1,
+    "paid": 129.0,
+    "refund_status": "none",
+    "carrier": "中通快递",
+    "tracking_no": "ZT7788990011",
+    "items": [
+      { "name": "小岚桌面收纳盒", "qty": 2, "price": 64.5 }
+    ]
+  },
+  {
+    "order_id": "A20261020003",
+    "user": "张伟",
+    "phone": "13812345678",
+    "address": "广东省深圳市南山区科技园南区 8 栋 301",
+    "status": "已签收",
+    "delivered_days_ago": 20,
+    "paid": 59.0,
+    "refund_status": "none",
+    "carrier": "圆通速递",
+    "tracking_no": "YT5566778899",
+    "items": [
+      { "name": "小岚 Type-C 数据线 1m", "qty": 1, "price": 59.0 }
+    ]
+  },
+  {
+    "order_id": "A20261110004",
+    "user": "张伟",
+    "phone": "13812345678",
+    "address": "广东省深圳市南山区科技园南区 8 栋 301",
+    "status": "已签收",
+    "delivered_days_ago": 2,
+    "paid": 89.0,
+    "refund_status": "refunded",
+    "carrier": "顺丰速运",
+    "tracking_no": "SF9988776655",
+    "items": [
+      { "name": "小岚便携充电宝 10000mAh", "qty": 1, "price": 89.0 }
+    ]
+  }
+]

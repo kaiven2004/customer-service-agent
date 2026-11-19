@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>小岚商城 · 智能客服</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230f766e'/%3E%3Ctext x='32' y='43' font-size='32' text-anchor='middle' fill='white' font-family='sans-serif'%3E岚%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #f4f3ee;
+    --panel: #ffffff;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --line: #e6e3da;
+    --brand: #0f766e;
+    --brand-dark: #115e59;
+    --brand-soft: #e6f4f1;
+    --bubble: #f6f6f2;
+    --danger: #b91c1c;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(900px 500px at 15% -10%, #dff0ec 0%, transparent 60%),
+      radial-gradient(700px 400px at 110% 10%, #f6ead8 0%, transparent 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .app {
+    width: min(920px, 100%);
+    height: min(88vh, 840px);
+    min-height: 520px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(31, 41, 55, .10);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #ffffff, #fcfcf9);
+  }
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    background: var(--brand);
+    color: #fff;
+    display: grid; place-items: center;
+    font-size: 20px; font-weight: 700;
+    letter-spacing: .5px;
+  }
+  .title { font-size: 16px; font-weight: 650; }
+  .subtitle { font-size: 12.5px; color: var(--muted); margin-top: 3px; display: flex; align-items: center; gap: 6px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block; }
+  .spacer { flex: 1; }
+  .ghost {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--muted);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .ghost:hover { border-color: var(--brand); color: var(--brand); }
+
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 22px 22px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    scroll-behavior: smooth;
+  }
+  .row { display: flex; gap: 10px; }
+  .row.user { justify-content: flex-end; }
+  .stack {
+    min-width: 0;
+    max-width: min(640px, 82%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .row.user .stack { align-items: flex-end; }
+  .mini-avatar {
+    width: 30px; height: 30px; border-radius: 10px;
+    background: var(--brand-soft); color: var(--brand-dark);
+    display: grid; place-items: center; font-size: 12px; font-weight: 700;
+    flex: none; margin-top: 2px;
+  }
+  .bubble {
+    max-width: 100%;
+    padding: 12px 15px;
+    border-radius: 14px;
+    line-height: 1.7;
+    font-size: 14.5px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .assistant .bubble { background: var(--bubble); border-top-left-radius: 4px; }
+  .user .bubble { background: var(--brand); color: #fff; border-top-right-radius: 4px; }
+  .meta { margin: 8px 0 0 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .cite {
+    font-size: 11.5px;
+    color: var(--brand-dark);
+    background: var(--brand-soft);
+    border: 1px solid #cfe8e2;
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  details.steps {
+    width: 100%;
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  details.steps summary { cursor: pointer; user-select: none; outline: none; }
+  details.steps summary:focus-visible { outline: 2px solid var(--brand-soft); border-radius: 4px; }
+  .step {
+    margin-top: 6px;
+    padding: 8px 10px;
+    background: #fbfbf8;
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 11.5px;
+    color: #4b5563;
+    word-break: break-all;
+  }
+  .handoff { color: var(--danger); font-size: 12px; margin-left: 8px; }
+
+  .welcome { margin: 8px 0 2px 40px; }
+  .welcome p { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: #374151;
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .chip:hover { border-color: var(--brand); color: var(--brand); background: #f7fdfb; }
+
+  .composer {
+    border-top: 1px solid var(--line);
+    padding: 14px 16px 16px;
+    background: #fdfdfb;
+  }
+  .input-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    padding: 8px 8px 8px 14px;
+    transition: border-color .15s;
+  }
+  .input-wrap:focus-within { border-color: var(--brand); }
+  textarea {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    resize: none;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+    max-height: 110px;
+    background: transparent;
+    color: var(--ink);
+    padding: 4px 0;
+  }
+  .send {
+    width: 38px; height: 38px;
+    border: 0; border-radius: 11px;
+    background: var(--brand);
+    color: #fff;
+    cursor: pointer;
+    display: grid; place-items: center;
+    flex: none;
+    transition: .15s;
+  }
+  .send:hover { background: var(--brand-dark); }
+  .send:disabled { opacity: .45; cursor: not-allowed; }
+  .hint { font-size: 11.5px; color: #9ca3af; margin-top: 8px; text-align: center; }
+
+  .typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
+  .typing span {
+    width: 6px; height: 6px; border-radius: 50%; background: #9ca3af;
+    animation: bounce 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: .15s; }
+  .typing span:nth-child(3) { animation-delay: .3s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+  .error .bubble { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+
+  @media (max-width: 640px) {
+    body { padding: 0; }
+    .app { height: 100vh; height: 100dvh; border-radius: 0; border: 0; min-height: 0; }
+    header { padding: 14px 16px; }
+    #messages { padding: 16px 14px 8px; }
+    .welcome { margin-left: 40px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="avatar">岚</div>
+    <div>
+      <div class="title">小岚商城 · 智能客服</div>
+      <div class="subtitle"><span class="dot"></span> 在线 · 平均 3 秒回复</div>
+    </div>
+    <div class="spacer"></div>
+    <button class="ghost" id="reset" title="清空当前对话">新会话</button>
+  </header>
+
+  <div id="messages" aria-live="polite"></div>
+
+  <div class="composer">
+    <div class="input-wrap">
+      <textarea id="input" rows="1" placeholder="输入问题，例如：我的订单到哪了？" maxlength="2000"></textarea>
+      <button class="send" id="send" aria-label="发送">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+    <div class="hint">知识库回答仅供参考 · Enter 发送 / Shift + Enter 换行</div>
+  </div>
+</div>
+
+<script>
+const messagesEl = document.getElementById("messages");
+const inputEl = document.getElementById("input");
+const sendBtn = document.getElementById("send");
+const resetBtn = document.getElementById("reset");
+
+const SESSION_KEY = "xiaolan_session";
+let sessionId = sessionStorage.getItem(SESSION_KEY);
+if (!sessionId) {
+  sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())).slice(0, 32);
+  sessionStorage.setItem(SESSION_KEY, sessionId);
+}
+
+const QUICK = [
+  "退货运费谁承担？",
+  "退款一般多久到账？",
+  "订单 A20261105001 到哪了？",
+  "七天无理由怎么退货？",
+];
+
+function scrollToBottom() {
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addWelcome() {
+  const wrap = document.createElement("div");
+  wrap.className = "welcome";
+  wrap.innerHTML = `<p>您好，我是小岚商城的客服助手。可以帮您查订单物流，也可以回答退换货、退款、发票和保修问题。</p>
+    <div class="chips"></div>`;
+  const chips = wrap.querySelector(".chips");
+  QUICK.forEach((text) => {
+    const button = document.createElement("button");
+    button.className = "chip";
+    button.textContent = text;
+    button.onclick = () => send(text);
+    chips.appendChild(button);
+  });
+  messagesEl.appendChild(wrap);
+}
+
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+function addMessage(role, text) {
+  const row = el("div", `row ${role}`);
+  if (role === "assistant") {
+    row.appendChild(el("div", "mini-avatar", "岚"));
+  }
+  const stack = el("div", "stack");
+  stack.appendChild(el("div", "bubble", text));
+  row.appendChild(stack);
+  messagesEl.appendChild(row);
+  scrollToBottom();
+  return { row, stack };
+}
+
+function addTyping() {
+  const { row, stack } = addMessage("assistant", "");
+  const bubble = stack.querySelector(".bubble");
+  bubble.innerHTML = '<span class="typing"><span></span><span></span><span></span></span>';
+  return row;
+}
+
+function renderMeta(stack, data) {
+  if (!data.citations?.length && !data.steps?.length && !data.handoff) return;
+  const meta = el("div", "meta");
+  (data.citations || []).forEach((cite) => {
+    meta.appendChild(el("span", "cite", cite.citation));
+  });
+  if (data.handoff) {
+    meta.appendChild(el("span", "handoff", "已转人工客服"));
+  }
+  if (data.steps?.length) {
+    const details = el("details", "steps");
+    details.appendChild(el("summary", "", `执行过程（${data.steps.length} 次工具调用）`));
+    data.steps.forEach((step) => {
+      const ok = step.ok === false ? "✗" : "✓";
+      const arg = JSON.stringify(step.arguments);
+      details.appendChild(
+        el("div", "step", `${ok} ${step.tool} ${arg} → ${step.preview}`)
+      );
+    });
+    meta.appendChild(details);
+  }
+  stack.appendChild(meta);
+}
+
+async function send(forcedText) {
+  const text = (forcedText ?? inputEl.value).trim();
+  if (!text || sendBtn.disabled) return;
+  if (forcedText === undefined) inputEl.value = "";
+  inputEl.style.height = "auto";
+  sendBtn.disabled = true;
+  addMessage("user", text);
+  const typing = addTyping();
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text, session_id: sessionId }),
+    });
+    if (!response.ok) {
+      const detail = await response.json().catch(() => ({}));
+      throw new Error(detail.detail || `请求失败（${response.status}）`);
+    }
+    const data = await response.json();
+    typing.remove();
+    const { stack } = addMessage("assistant", data.answer);
+    renderMeta(stack, data);
+  } catch (error) {
+    typing.remove();
+    const { row, stack } = addMessage("assistant", `服务暂时不可用：${error.message}`);
+    row.classList.add("error");
+  } finally {
+    sendBtn.disabled = false;
+    inputEl.focus();
+    scrollToBottom();
+  }
+}
+
+async function reset() {
+  await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/reset`, { method: "POST" }).catch(() => {});
+  messagesEl.innerHTML = "";
+  addWelcome();
+  inputEl.focus();
+}
+
+sendBtn.addEventListener("click", () => send());
+inputEl.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    send();
+  }
+});
+inputEl.addEventListener("input", () => {
+  inputEl.style.height = "auto";
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + "px";
+});
+resetBtn.addEventListener("click", reset);
+
+addWelcome();
+inputEl.focus();
+</script>
+</body>
+</html>

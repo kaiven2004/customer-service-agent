@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 本地配置与密钥
+.env
+.env.local
+*.pem
+
+# 运行时生成物
+data/index.json
+data/refunds.jsonl
+data/handoffs.jsonl
+data/*.log
+eval/report.json
+*.log
+
+# 编辑器 / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

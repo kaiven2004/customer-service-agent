@@ -1,0 +1,12 @@
+{"id": "kb-return-fee", "question": "退货运费谁承担？", "expected_tools": ["search_kb"], "must_contain": ["运费"], "expect_handoff": false}
+{"id": "kb-refund-time", "question": "退款一般多久到账？", "expected_tools": ["search_kb"], "must_contain": ["工作日"], "expect_handoff": false}
+{"id": "kb-return-window", "question": "七天无理由退货是怎么算的？", "expected_tools": ["search_kb"], "must_contain": ["7 天"], "expect_handoff": false}
+{"id": "kb-invoice", "question": "怎么开发票？", "expected_tools": ["search_kb"], "must_contain": ["发票"], "expect_handoff": false}
+{"id": "kb-warranty", "question": "耳机保修多久？", "expected_tools": ["search_kb"], "must_contain": ["保修"], "expect_handoff": false}
+{"id": "order-status", "question": "订单 A20261108002 现在是什么状态？", "expected_tools": ["get_order"], "must_contain": ["运输中"], "expect_handoff": false}
+{"id": "order-logistics", "question": "订单 A20261108002 到哪了？", "expected_tools": ["get_logistics"], "must_contain": ["中通"], "expect_handoff": false}
+{"id": "order-not-found", "question": "帮我查一下订单 A99999999", "expected_tools": ["get_order"], "must_contain": ["订单"], "expect_handoff": false}
+{"id": "refund-need-confirm", "question": "我要退款，订单 A20261105001，因为耳机有杂音", "expected_tools": ["request_refund"], "must_contain": ["确认"], "expect_handoff": false}
+{"id": "refund-expired", "question": "订单 A20261020003 签收 20 天了，还能退款吗？", "expected_tools": ["request_refund"], "must_contain": ["7 天"], "expect_handoff": false}
+{"id": "handoff-explicit", "question": "转人工", "expected_tools": ["handoff_to_human"], "must_contain": ["人工"], "expect_handoff": true}
+{"id": "handoff-offtopic", "question": "帮我写一首关于春天的诗", "expected_tools": ["search_kb", "handoff_to_human"], "must_contain": [], "expect_handoff": true}
